@@ -55,12 +55,12 @@ namespace SyllabusManager.App.Commands
             var semester = Console.ReadLine();
 
             var content = new Dictionary<string, object>();
-            Console.WriteLine("Enter content fields (key=value). Enter 'done' to finish.");
+            Console.WriteLine("Enter content fields (key=value). Enter '-1' to finish.");
             while (true)
             {
                 Console.Write("Key: ");
                 var key = Console.ReadLine();
-                if (key == "done" || string.IsNullOrWhiteSpace(key)) break;
+                if (key == "-1" || string.IsNullOrWhiteSpace(key)) break;
                 Console.Write("Value: ");
                 var val = Console.ReadLine();
                 content[key] = val;
@@ -120,7 +120,7 @@ namespace SyllabusManager.App.Commands
                 {
                     Console.Write("Key: ");
                     var key = Console.ReadLine();
-                    if (key == "done" || string.IsNullOrWhiteSpace(key)) break;
+                    if (key == "-1" || string.IsNullOrWhiteSpace(key)) break;
                     Console.Write("Value: ");
                     var val = Console.ReadLine();
                     newVer.Content[key] = val;
@@ -220,6 +220,19 @@ namespace SyllabusManager.App.Commands
                 Console.WriteLine($"Diff:\n{c.Diff}");
                 Console.WriteLine("----------------------");
             }
+        }
+    }
+
+    public class RevertCommand : BaseCommand
+    {
+        public RevertCommand(SyllabusService service, User user) : base(service, user) { }
+        public override string Description => "Revert to a Commit";
+
+        public override void Execute()
+        {
+            Console.Write("Enter Commit ID to revert to: ");
+            var id = Console.ReadLine();
+            _service.RevertToCommit(_user, id);
         }
     }
 

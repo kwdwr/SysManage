@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SyllabusManager.App.Interfaces;
 using SyllabusManager.App.Models;
+using SyllabusManager.App.Helpers;
 
 namespace SyllabusManager.App.Services
 {
@@ -23,6 +24,8 @@ namespace SyllabusManager.App.Services
 
         public void CreateSyllabus(User user, Syllabus syllabus)
         {
+            syllabus.CourseCode = SyllabusHelper.NormalizeCode(syllabus.CourseCode);
+
             if (!_auth.CanCreateOrEdit(user, syllabus.CourseCode))
             {
                 Console.WriteLine("Access Denied: You cannot create this syllabus.");
@@ -52,6 +55,7 @@ namespace SyllabusManager.App.Services
 
         public void UpdateSyllabus(User user, string courseCode, Syllabus newVersion, string commitMessage)
         {
+            courseCode = SyllabusHelper.NormalizeCode(courseCode);
             var existing = _data.Syllabi.FirstOrDefault(s => s.CourseCode == courseCode);
             if (existing == null)
             {
@@ -84,6 +88,8 @@ namespace SyllabusManager.App.Services
 
         public void DeleteSyllabus(User user, string courseCode)
         {
+            courseCode = SyllabusHelper.NormalizeCode(courseCode);
+
             if (!_auth.CanDelete(user))
             {
                 Console.WriteLine("Access Denied: You cannot delete syllabi.");
@@ -103,7 +109,27 @@ namespace SyllabusManager.App.Services
 
         public Syllabus GetSyllabus(string courseCode)
         {
+            courseCode = SyllabusHelper.NormalizeCode(courseCode);
             return _data.Syllabi.FirstOrDefault(s => s.CourseCode == courseCode);
+        }
+
+        public void RevertToCommit(User user, string commitId)
+        {
+             var commit = _data.Commits.FirstOrDefault(c => c.CommitId == commitId);
+             if (commit == null)
+             {
+                 Console.WriteLine("Error: Commit not found.");
+                 return;
+             }
+
+             var snapshot = commit.Snapshot;
+             if (snapshot == null)
+             {
+                  Console.WriteLine("Error: Snapshot is null for this commit.");
+                  return;
+             }
+
+             UpdateSyllabus(user, snapshot.CourseCode, snapshot, $"Reverted to commit {commitId} by {user.Name}");
         }
 
         public List<Syllabus> GetAll()
