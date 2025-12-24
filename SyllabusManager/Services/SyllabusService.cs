@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using SyllabusManager.App.Data;
+using SyllabusManager.App.Interfaces;
 using SyllabusManager.App.Models;
 
 namespace SyllabusManager.App.Services
 {
     public class SyllabusService
     {
-        private readonly DataService _data;
-        private readonly AuthorizationService _auth;
-        private readonly VersionControlService _vcs;
-        private readonly NotificationService _notify;
+        private readonly IDataRepository _data;
+        private readonly IAuthorizationService _auth;
+        private readonly IVersionControlService _vcs;
+        private readonly INotificationService _notify;
 
-        public SyllabusService(DataService data, AuthorizationService auth, VersionControlService vcs, NotificationService notify)
+        public SyllabusService(IDataRepository data, IAuthorizationService auth, IVersionControlService vcs, INotificationService notify)
         {
             _data = data;
             _auth = auth;
@@ -26,6 +26,7 @@ namespace SyllabusManager.App.Services
             if (!_auth.CanCreateOrEdit(user, syllabus.CourseCode))
             {
                 Console.WriteLine("Access Denied: You cannot create this syllabus.");
+                _data.AddLog($"Access Denied: User {user.Name} tried to create {syllabus.CourseCode}");
                 return;
             }
 
@@ -37,7 +38,6 @@ namespace SyllabusManager.App.Services
 
             _data.Syllabi.Add(syllabus);
 
-            // Initial Commit
             var commit = _vcs.CreateCommit(null, syllabus, user, "Initial creation");
             _data.Commits.Add(commit);
 
@@ -45,6 +45,8 @@ namespace SyllabusManager.App.Services
             _data.SaveCommits();
 
             Console.WriteLine($"Syllabus {syllabus.CourseCode} created successfully.");
+            _data.AddLog($"Created Syllabus: {syllabus.CourseCode} by {user.Name}");
+            
             _notify.Notify(commit, syllabus.CourseCode);
         }
 
@@ -60,13 +62,12 @@ namespace SyllabusManager.App.Services
             if (!_auth.CanCreateOrEdit(user, courseCode))
             {
                 Console.WriteLine("Access Denied: You cannot edit this syllabus.");
+                _data.AddLog($"Access Denied: User {user.Name} tried to edit {courseCode}");
                 return;
             }
 
-            // Create Commit BEFORE updating the reference (so we can compare)
             var commit = _vcs.CreateCommit(existing, newVersion, user, commitMessage);
 
-            // Apply Update
             existing.Title = newVersion.Title;
             existing.Semester = newVersion.Semester;
             existing.Content = newVersion.Content;
@@ -76,6 +77,8 @@ namespace SyllabusManager.App.Services
             _data.SaveCommits();
 
             Console.WriteLine($"Syllabus {courseCode} updated successfully.");
+            _data.AddLog($"Updated Syllabus: {courseCode} by {user.Name}");
+            
             _notify.Notify(commit, courseCode);
         }
 
@@ -84,6 +87,7 @@ namespace SyllabusManager.App.Services
             if (!_auth.CanDelete(user))
             {
                 Console.WriteLine("Access Denied: You cannot delete syllabi.");
+                _data.AddLog($"Access Denied: User {user.Name} tried to delete {courseCode}");
                 return;
             }
 
@@ -93,6 +97,7 @@ namespace SyllabusManager.App.Services
                 _data.Syllabi.Remove(existing);
                 _data.SaveSyllabi();
                 Console.WriteLine($"Syllabus {courseCode} deleted.");
+                _data.AddLog($"Deleted Syllabus: {courseCode} by {user.Name}");
             }
         }
 
