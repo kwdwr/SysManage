@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using SyllabusManager.App.Models;
+using SyllabusManager.App.Interfaces;
 
 namespace SyllabusManager.App.Services
 {
-    public class AuthorizationService
+    public class AuthorizationService : IAuthorizationService
     {
         public bool CanCreateOrEdit(User user, string courseCode)
         {
-            if (user is AdminUser) return true; // Admins can do anything
+            if (user is AdminUser) return true; 
 
             if (user is InstructorUser instructor)
             {
-                // Logic: Instructor can only edit courses matching their department prefix
-                // e.g. CE user -> CExxx courses
-                // SE user -> SExxx courses
                 if (courseCode.StartsWith(instructor.Department, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
@@ -28,16 +25,13 @@ namespace SyllabusManager.App.Services
 
         public bool CanDelete(User user)
         {
-            // Only admins or maybe Instructors can delete? 
-            // The prompt says "ce_user which has the privilege of creating, updating, and deleting syllabi"
-            // So Instructors can delete too.
             if (user is AdminUser) return true;
             if (user is InstructorUser) return true;
             return false;
         }
     }
 
-    public class VersionControlService
+    public class VersionControlService : IVersionControlService
     {
         public Commit CreateCommit(Syllabus oldVer, Syllabus newVer, User author, string message)
         {
@@ -46,7 +40,7 @@ namespace SyllabusManager.App.Services
                 AuthorId = author.Id,
                 AuthorName = author.Name,
                 Message = message,
-                Snapshot = newVer // Store the full snapshot of the new version
+                Snapshot = newVer 
             };
 
             commit.Diff = ComputeDiff(oldVer, newVer);
@@ -65,7 +59,6 @@ namespace SyllabusManager.App.Services
             if (oldVer.Semester != newVer.Semester)
                 diffs.Add($"Semester changed: '{oldVer.Semester}' -> '{newVer.Semester}'");
 
-            // Compare Content Dictionary
             var allKeys = oldVer.Content.Keys.Union(newVer.Content.Keys);
             foreach (var key in allKeys)
             {
