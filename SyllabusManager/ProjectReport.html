@@ -1,0 +1,124 @@
+<style>
+  body {
+    font-family: 'Times New Roman', serif;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    color: #333;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .code {
+    font-family: 'Courier New', monospace;
+    background-color: #f4f4f4;
+    padding: 2px 4px;
+    border-radius: 4px;
+  }
+
+  .section {
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="header">
+  <h1>SE 307 Concepts of Object Oriented Programming</h1>
+  <h2>Project Report</h2>
+  <p><strong>Student Name:</strong> Kadir Biberoğlu</p>
+  <p><strong>Student ID:</strong> 20200601105</p>
+  <p><strong>Date:</strong> 25.12.2025</p>
+</div>
+
+<div class="section">
+  <h2>1. Introduction</h2>
+  <p>This project develops a robust <strong>Distributed Syllabus Management System</strong> to address inconsistencies
+    in course management. Moving away from manual processes (e.g., Word documents), this solution offers a centralized,
+    version-controlled repository utilizing <strong>JSON</strong> for data standardization. It integrates advanced
+    features like simplified <strong>OAuth-like authentication</strong> simulation, <strong>Role-Based Access Control
+      (RBAC)</strong>, and a <strong>Multi-channel Notification System</strong>.</p>
+</div>
+
+<div class="section">
+  <h2>2. Requirements Analysis</h2>
+  <p>The system is designed to meet the following critical requirements:</p>
+  <ul>
+    <li><strong>Role-Based Access Control:</strong> Distinct privileges for Instructors (Department-limited), Head of
+      Departments (Full Read/Write), and Admins (System Management).</li>
+    <li><strong>User Management:</strong> Administrators have the capability to Create and Delete users dynamically.
+    </li>
+    <li><strong>Syllabus CRUD & Flexible Content:</strong> Capability to manage syllabi with a schema-less design
+      (Key-Value pairs) for flexibility.</li>
+    <li><strong>Version Control System:</strong> A Git-like tracking system that records every change with Commit IDs,
+      Messages, Diffs, and Authors, allowing for rollback (Revert).</li>
+    <li><strong>Automated Testing:</strong> The system ensures reliability through a comprehensive Unit Test suite
+      (xUnit & Moq) integration.</li>
+    <li><strong>Containerization:</strong> The entire application usage cycle (Build -> Test -> Run) is encapsulated in
+      a robust <strong>Docker</strong> environment.</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>3. System Design and Implementation</h2>
+  <h3>3.1. Architecture</h3>
+  <p>The application follows a modular Clean Architecture approach:</p>
+  <ul>
+    <li><strong>Presentation Layer:</strong> Console-based UI driven by the Command Pattern
+      (<code>CommandInvoker</code>).</li>
+    <li><strong>Service Layer:</strong> Encapsulates business rules (<code>SyllabusService</code>,
+      <code>UserManagementService</code>, <code>PermissionService</code>).</li>
+    <li><strong>Data Layer:</strong> <code>JsonDataRepository</code> provides persistent storage using JSON files.</li>
+    <li><strong>Test Layer:</strong> Independent test project validating core logic and commands.</li>
+  </ul>
+
+  <h3>3.2. Design Patterns Applied</h3>
+  <p>The system strictly adheres to SOLID principles and utilizes multiple GoF Design Patterns:</p>
+  <ul>
+    <li><strong>Command Pattern:</strong> Decouples the UI from business logic. Operations like
+      <code>CreateUserCommand</code> or <code>RevertCommand</code> are encapsulated objects.</li>
+    <li><strong>Factory Pattern:</strong> <code>ServiceFactory</code> centralizes dependency injection, ensuring loosely
+      coupled components.</li>
+    <li><strong>Observer Pattern:</strong> <code>NotificationService</code> (Subject) notifies registered
+      <code>INotificationChannel</code> (Observers) when a syllabus changes, enabling real-time alerts.</li>
+    <li><strong>Adapter Pattern:</strong> <code>EmailAdapter</code> wraps external service interfaces to match the
+      system's <code>INotificationChannel</code>, promoting interoperability.</li>
+    <li><strong>Strategy Pattern (Implicit):</strong> The notification system allows runtime selection of different
+      strategies (Email vs SMS).</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>4. Features Implemented</h2>
+  <ul>
+    <li><strong>Dynamic User Management:</strong> Admins can add or remove users from the system without system restart.
+    </li>
+    <li><strong>Advanced Version Control:</strong>
+      <ul>
+        <li><strong>Commit History:</strong> Detailed audit logs of all changes.</li>
+        <li><strong>Diff Generation:</strong> Automatic calculation of "what changed" between versions.</li>
+        <li><strong>Revert:</strong> Ability to rollback a syllabus to any previous commit state.</li>
+      </ul>
+    </li>
+    <li><strong>Docker & CI/CD Simulation:</strong> A single <code>Dockerfile</code> that orchestrates the Build, Test,
+      and Run lifecycle, ensuring code quality before deployment.</li>
+    <li><strong>Subscription System:</strong> Users can subscribe to specific course codes (e.g., "CE*") to receive
+      automatic updates.</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>5. Conclusion</h2>
+  <p>The Syllabus Management System successfully demonstrates the application of complex software engineering concepts.
+    By integrating <strong>Design Patterns</strong>, <strong>Unit Testing</strong>, and
+    <strong>Containerization</strong>, the project serves as a scalable and maintainable solution for academic course
+    management. The addition of Admin tools and robust testing infrastructure ensures both flexibility and system
+    stability.</p>
+</div>

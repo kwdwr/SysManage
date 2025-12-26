@@ -8,12 +8,14 @@ namespace SyllabusManager.App.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string Department { get; set; } // e.g., "CE", "SE"
+        public string Password { get; set; }
 
         public User(string id, string name, string department)
         {
             Id = id;
             Name = name;
             Department = department;
+            Password = "123"; // Default password
         }
 
         public abstract string GetRoleDescription();
@@ -32,7 +34,7 @@ namespace SyllabusManager.App.Models
         public HeadOfDepartmentUser(string id, string name, string department)
             : base(id, name, department) { }
 
-        public override string GetRoleDescription() => "Head of Department - Receives notifications for changes.";
+        public override string GetRoleDescription() => "Head of Department - Can manage all syllabi and receives notifications.";
     }
 
     public class AdminUser : User

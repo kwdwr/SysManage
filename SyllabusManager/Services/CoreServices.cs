@@ -10,7 +10,9 @@ namespace SyllabusManager.App.Services
     {
         public bool CanCreateOrEdit(User user, string courseCode)
         {
-            if (user is AdminUser) return true; 
+            if (user is AdminUser) return true;
+            // HEAD OF DEPARTMENT: Can create/edit any course
+            if (user is HeadOfDepartmentUser) return true; 
 
             if (user is InstructorUser instructor)
             {
@@ -26,6 +28,7 @@ namespace SyllabusManager.App.Services
         public bool CanDelete(User user)
         {
             if (user is AdminUser) return true;
+            if (user is HeadOfDepartmentUser) return true;
             if (user is InstructorUser) return true;
             return false;
         }

@@ -55,12 +55,12 @@ namespace SyllabusManager.App.Commands
             var semester = Console.ReadLine();
 
             var content = new Dictionary<string, object>();
-            Console.WriteLine("Enter content fields (key=value). Enter 'done' to finish.");
+            Console.WriteLine("Enter content fields (key=value). Enter '-1' to finish.");
             while (true)
             {
                 Console.Write("Key: ");
                 var key = Console.ReadLine();
-                if (key == "done" || string.IsNullOrWhiteSpace(key)) break;
+                if (key == "-1" || string.IsNullOrWhiteSpace(key)) break;
                 Console.Write("Value: ");
                 var val = Console.ReadLine();
                 content[key] = val;
@@ -120,7 +120,7 @@ namespace SyllabusManager.App.Commands
                 {
                     Console.Write("Key: ");
                     var key = Console.ReadLine();
-                    if (key == "done" || string.IsNullOrWhiteSpace(key)) break;
+                    if (key == "-1" || string.IsNullOrWhiteSpace(key)) break;
                     Console.Write("Value: ");
                     var val = Console.ReadLine();
                     newVer.Content[key] = val;
@@ -223,6 +223,19 @@ namespace SyllabusManager.App.Commands
         }
     }
 
+    public class RevertCommand : BaseCommand
+    {
+        public RevertCommand(SyllabusService service, User user) : base(service, user) { }
+        public override string Description => "Revert to a Commit";
+
+        public override void Execute()
+        {
+            Console.Write("Enter Commit ID to revert to: ");
+            var id = Console.ReadLine();
+            _service.RevertToCommit(_user, id);
+        }
+    }
+
     public class LogoutCommand : ICommand
     {
         private readonly Action _onLogout;
@@ -245,6 +258,57 @@ namespace SyllabusManager.App.Commands
         public void Execute()
         {
             Environment.Exit(0);
+        }
+    }
+
+    public class CreateUserCommand : ICommand
+    {
+        private readonly IUserManagementService _service;
+        private readonly User _creator;
+        public string Description => "[ADMIN] Create New User";
+
+        public CreateUserCommand(IUserManagementService service, User creator)
+        {
+            _service = service;
+            _creator = creator;
+        }
+
+        public void Execute()
+        {
+            Console.WriteLine("\n--- Create New User ---");
+            Console.Write("Username: ");
+            var name = Console.ReadLine();
+            Console.Write("Password: ");
+            var pass = Console.ReadLine();
+            Console.Write("Department (e.g. CE, SE, or ALL): ");
+            var dept = Console.ReadLine();
+            
+            Console.WriteLine("Role Types: instructor, head, admin");
+            Console.Write("Role: ");
+            var role = Console.ReadLine();
+
+            _service.CreateUser(_creator, name, pass, dept, role);
+        }
+    }
+
+    public class DeleteUserCommand : ICommand
+    {
+        private readonly IUserManagementService _service;
+        private readonly User _creator;
+        public string Description => "[ADMIN] Delete User";
+
+        public DeleteUserCommand(IUserManagementService service, User creator)
+        {
+            _service = service;
+            _creator = creator;
+        }
+
+        public void Execute()
+        {
+             Console.WriteLine("\n--- Delete User ---");
+             Console.Write("Enter User ID to delete: ");
+             var id = Console.ReadLine();
+             _service.DeleteUser(_creator, id);
         }
     }
 }

@@ -41,10 +41,10 @@ namespace SyllabusManager.App.Data
                 {
                     Users = new List<User>
                     {
-                        new InstructorUser("1", "Kaya Oguz", "CE"),
-                        new InstructorUser("2", "John Doe", "SE"),
-                        new HeadOfDepartmentUser("3", "Jane Smith", "CE"),
-                        new AdminUser("99", "Admin", "ALL")
+                        new InstructorUser("1", "Kaya Oguz", "CE") { Password = "kayaoguz123" },
+                        new InstructorUser("2", "Kadir Biberoglu", "SE") { Password = "kadir123" },
+                        new HeadOfDepartmentUser("3", "Department Head", "CE") { Password = "head123" },
+                        new AdminUser("99", "Admin", "ALL") { Password = "admin123" }
                     };
                     SaveFile("users.json", Users); // Persist mock users
                 }
