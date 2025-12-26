@@ -7,7 +7,7 @@ namespace SyllabusManager.App.Helpers
         public static string NormalizeCode(string input)
         {
             if (string.IsNullOrWhiteSpace(input)) return input;
-            // Remove all whitespace
+            // Remove all whitespaces
             return Regex.Replace(input, @"\s+", "").ToUpperInvariant();
         }
     }

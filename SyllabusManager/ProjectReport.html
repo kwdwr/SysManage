@@ -1,0 +1,77 @@
+<style>
+  body { font-family: 'Times New Roman', serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; }
+  h1, h2, h3 { color: #333; }
+  .header { text-align: center; margin-bottom: 40px; }
+  .code { font-family: 'Courier New', monospace; background-color: #f4f4f4; padding: 2px 4px; border-radius: 4px; }
+  .section { margin-bottom: 20px; }
+</style>
+
+<div class="header">
+  <h1>SE 307 Concepts of Object Oriented Programming</h1>
+  <h2>Project Report</h2>
+  <p><strong>Student Name:</strong> Kadir Biberoğlu</p>
+  <p><strong>Student ID:</strong> 20200601105</p>
+  <p><strong>Date:</strong> 25.12.2025</p>
+</div>
+
+<div class="section">
+  <h2>1. Introduction</h2>
+  <p>This project aims to develop a robust <strong>Syllabus Management System</strong> to address the inconsistencies and difficulties in managing course syllabi within the university. The current system relies on disparate solutions like "Firebird" and various Word document templates, leading to data duplication, loss of version history, and management inefficiencies.</p>
+  <p>The proposed solution is a C# based application that standardizes syllabus data using <strong>JSON format</strong>, enables <strong>version control</strong> to track changes, and integrates <strong>notification services</strong> to keep stakeholders informed of updates.</p>
+</div>
+
+<div class="section">
+  <h2>2. Requirements Analysis</h2>
+  <p>The system was designed to meet the following key requirements:</p>
+  <ul>
+    <li><strong>Authentication:</strong> Secure login mechanism simulating OAuth, with role-based access control (e.g., separating standard users from admins).</li>
+    <li><strong>Syllabus Management (CRUD):</strong> Capability to List, Create, Update, and Delete syllabi.</li>
+    <li><strong>Data Standardization:</strong> Storing all syllabus data in structured <strong>JSON</strong> format to separate content from presentation.</li>
+    <li><strong>Version Control:</strong> Tracking changes (Who, When, Why) and allowing reversion to previous states, mimicking Git-like functionality.</li>
+    <li><strong>Notifications:</strong> alerting interested parties (subscribers) via Email and SMS (simulated) when a syllabus is updated.</li>
+    <li><strong>Platform:</strong> Built using <strong>C#</strong>, adhering to Object-Oriented Programming principles and SOLID best practices.</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>3. System Design and Implementation</h2>
+  <h3>3.1. Architecture</h3>
+  <p>The application follows a modular architecture, separating concerns into distinct layers:</p>
+  <ul>
+    <li><strong>Presentation Layer:</strong> A Console-based user interface managed by a <code>CommandInvoker</code>.</li>
+    <li><strong>Service Layer:</strong> Contains business logic (<code>SyllabusService</code>, <code>NotificationService</code>, <code>AuthorizationService</code>).</li>
+    <li><strong>Data Access Layer:</strong> <code>JsonDataRepository</code> handles reading/writing data to JSON files.</li>
+    <li><strong>Domain Layer:</strong> Defines core models like <code>Syllabus</code>, <code>User</code>, and interfaces.</li>
+  </ul>
+
+  <h3>3.2. Design Patterns Applied</h3>
+  <p>To ensure maintainability and scalability, several standard design patterns were implemented:</p>
+  <ul>
+    <li><strong>Command Pattern:</strong> Used to encapsulate user actions (e.g., <code>ListSyllabiCommand</code>, <code>CreateSyllabusCommand</code>). This allows for decoupling the UI from the business logic and facilitates extending the menu with new commands easily.</li>
+    <li><strong>Factory Pattern:</strong> Implemented in <code>ServiceFactory</code> class. It centralizes the creation of services (like <code>GetSyllabusService</code>), ensuring that dependencies are injected correctly and single instances are managed effectively.</li>
+    <li><strong>Adapter Pattern:</strong> The <code>EmailAdapter</code> class adapts the external <code>ThirdPartyEmailService</code> to the internal <code>INotificationChannel</code> interface. This allows the system to switch or add new notification providers without changing the core logic.</li>
+    <li><strong>Observer Pattern:</strong> The <code>NotificationService</code> acts as a subject that notifies subscribed observers (channels like Email) when a significant event (e.g., valid update) occurs. Users can subscribe to specific courses.</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>4. Features Implemented</h2>
+  <ul>
+    <li><strong>User Authentication:</strong> Users log in with a password. The system verifies credentials against the stored user data.</li>
+    <li><strong>JSON Data Storage:</strong> Syllabi are saved as JSON files, ensuring a standardized, machine-readable format.</li>
+    <li><strong>CRUD Operations:</strong> Full Create, Read, Update, Delete functionality for course syllabi.</li>
+    <li><strong>History & Versioning:</strong>
+      <ul>
+        <li>Every update creates a commit log (Audit Log) with "Who", "When", and "Why".</li>
+        <li>Users can view the history of changes.</li>
+        <li><strong>Revert Capability:</strong> Integrating a "git revert" style feature to restore a syllabus to a previous version.</li>
+      </ul>
+    </li>
+    <li><strong>Notifications:</strong> When a syllabus is updated, subscribed users are notified via the configured channels (simulated Email/SMS).</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>5. Conclusion</h2>
+  <p>The Syllabus Management System successfully addresses the problem of fragmented syllabus data. By leveraging C# and Object-Oriented best practices, the application provides a centralized, version-controlled, and standardized environment for managing course information. The use of design patterns ensures the codebase remains clean, testable, and easy to extend for future requirements.</p>
+</div>

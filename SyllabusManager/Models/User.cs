@@ -34,7 +34,7 @@ namespace SyllabusManager.App.Models
         public HeadOfDepartmentUser(string id, string name, string department)
             : base(id, name, department) { }
 
-        public override string GetRoleDescription() => "Head of Department - Receives notifications for changes.";
+        public override string GetRoleDescription() => "Head of Department - Can manage all syllabi and receives notifications.";
     }
 
     public class AdminUser : User

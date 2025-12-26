@@ -4,7 +4,7 @@ using SyllabusManager.App.Services;
 
 namespace SyllabusManager.App.Factories
 {
-    // FACTORY PATTERN: Centralized Service Creation
+    // FACTORY PATTERN
     public static class ServiceFactory
     {
         private static IDataRepository _repository;
