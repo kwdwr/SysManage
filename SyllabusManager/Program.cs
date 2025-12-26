@@ -40,22 +40,35 @@ namespace SyllabusManager.App
                 var u = _data.Users[i];
                 Console.WriteLine($"{i + 1}. {u.Name} [Pass: {u.Password}] ({u.GetRoleDescription()}) [Dept: {u.Department}]");
             }
-            Console.Write("Choice: ");
-            if (int.TryParse(Console.ReadLine(), out int choice) && choice > 0 && choice <= _data.Users.Count)
+            Console.Write("Choice (0 to Exit): ");
+            if (int.TryParse(Console.ReadLine(), out int choice))
             {
-                var selectedUser = _data.Users[choice - 1];
-                Console.Write($"Enter Password for {selectedUser.Name}: ");
-                var password = ReadPassword();
-
-                if (password == selectedUser.Password)
+                if (choice == 0)
                 {
-                    _currentUser = selectedUser;
-                    Console.WriteLine($"Logged in as {_currentUser.Name}");
-                    _data.AddLog($"Login: {_currentUser.Name}");
+                    Console.WriteLine("Exiting...");
+                    Environment.Exit(0);
+                }
+
+                if (choice > 0 && choice <= _data.Users.Count)
+                {
+                    var selectedUser = _data.Users[choice - 1];
+                    Console.Write($"Enter Password for {selectedUser.Name}: ");
+                    var password = ReadPassword();
+
+                    if (password == selectedUser.Password)
+                    {
+                        _currentUser = selectedUser;
+                        Console.WriteLine($"Logged in as {_currentUser.Name}");
+                        _data.AddLog($"Login: {_currentUser.Name}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid Password.");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid Password.");
+                    Console.WriteLine("Invalid choice.");
                 }
             }
             else
@@ -111,6 +124,15 @@ namespace SyllabusManager.App
                 Console.WriteLine($"Logging out {_currentUser.Name}...");
                 _currentUser = null; 
             }));
+
+            // ADMIN COMMANDS
+            if (_currentUser is AdminUser)
+            {
+                var userService = ServiceFactory.GetUserManagementService();
+                invoker.Register("10", new CreateUserCommand(userService, _currentUser));
+                invoker.Register("11", new DeleteUserCommand(userService, _currentUser));
+            }
+
             invoker.Register("0", new ExitCommand());
 
             Console.WriteLine($"\n=== MENU (User: {_currentUser.Name}) ===");

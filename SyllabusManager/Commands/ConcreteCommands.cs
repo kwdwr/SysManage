@@ -260,4 +260,55 @@ namespace SyllabusManager.App.Commands
             Environment.Exit(0);
         }
     }
+
+    public class CreateUserCommand : ICommand
+    {
+        private readonly IUserManagementService _service;
+        private readonly User _creator;
+        public string Description => "[ADMIN] Create New User";
+
+        public CreateUserCommand(IUserManagementService service, User creator)
+        {
+            _service = service;
+            _creator = creator;
+        }
+
+        public void Execute()
+        {
+            Console.WriteLine("\n--- Create New User ---");
+            Console.Write("Username: ");
+            var name = Console.ReadLine();
+            Console.Write("Password: ");
+            var pass = Console.ReadLine();
+            Console.Write("Department (e.g. CE, SE, or ALL): ");
+            var dept = Console.ReadLine();
+            
+            Console.WriteLine("Role Types: instructor, head, admin");
+            Console.Write("Role: ");
+            var role = Console.ReadLine();
+
+            _service.CreateUser(_creator, name, pass, dept, role);
+        }
+    }
+
+    public class DeleteUserCommand : ICommand
+    {
+        private readonly IUserManagementService _service;
+        private readonly User _creator;
+        public string Description => "[ADMIN] Delete User";
+
+        public DeleteUserCommand(IUserManagementService service, User creator)
+        {
+            _service = service;
+            _creator = creator;
+        }
+
+        public void Execute()
+        {
+             Console.WriteLine("\n--- Delete User ---");
+             Console.Write("Enter User ID to delete: ");
+             var id = Console.ReadLine();
+             _service.DeleteUser(_creator, id);
+        }
+    }
 }

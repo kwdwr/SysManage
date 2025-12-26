@@ -1,18 +1,31 @@
 # 1️⃣ Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
+WORKDIR /src
 
-# csproj'yi önce kopyala (cache için önemli)
-COPY *.csproj ./
-RUN dotnet restore
+# Copy csproj files explicitly (assuming build context is root 'SysManage')
+COPY ["SyllabusManager/SyllabusManager.csproj", "SyllabusManager/"]
+COPY ["Tests/Tests.csproj", "Tests/"]
+RUN dotnet restore "SyllabusManager/SyllabusManager.csproj"
+RUN dotnet restore "Tests/Tests.csproj"
 
-# tüm kaynak kodu kopyala
-COPY . ./
-RUN dotnet publish -c Release -o /out
+# Copy all source
+COPY . .
+
+# Build
+WORKDIR "/src/SyllabusManager"
+RUN dotnet build -c Release -o /app/build
+
+# Run Tests
+WORKDIR "/src/Tests"
+RUN dotnet test -c Release --verbosity normal
+
+# Publish
+WORKDIR "/src/SyllabusManager"
+RUN dotnet publish -c Release -o /app/publish
 
 # 2️⃣ Runtime stage
 FROM mcr.microsoft.com/dotnet/runtime:8.0
 WORKDIR /app
-COPY --from=build /out ./
+COPY --from=build /app/publish .
 
 ENTRYPOINT ["dotnet", "SyllabusManager.dll"]

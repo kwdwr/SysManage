@@ -62,5 +62,15 @@ namespace SyllabusManager.App.Factories
             }
             return _syllabusService;
         }
+
+        private static IUserManagementService _userService;
+        public static IUserManagementService GetUserManagementService()
+        {
+            if (_userService == null)
+            {
+                _userService = new UserManagementService(GetDataRepository());
+            }
+            return _userService;
+        }
     }
 }
