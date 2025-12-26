@@ -1,114 +1,198 @@
-# Syllabus Manager System
+# SE 307 Syllabus Management System
 
-A comprehensive console-based Syllabus Management System built with .NET 8.0 demonstrating advanced Object-Oriented Programming (OOP) principles and Design Patterns in a Distributed System context.
+[![.NET](https://img.shields.io/badge/.NET-8.0-blue.svg)](https://dotnet.microsoft.com/download/dotnet/8.0)
+[![C#](https://img.shields.io/badge/C%23-11.0-green.svg)](https://docs.microsoft.com/en-us/dotnet/csharp/)
+[![License](https://img.shields.io/badge/License-Academic-yellow.svg)](LICENSE)
 
-## Overview
+> **Academic Project for SE 307 - Concepts of Object Oriented Programming**  
+> **Student:** Kadir Biberoğlu (20200601105)  
+> **Instructor:** Kaya Oğuz  
+> **Institution:** Izmir University of Economics
 
-The Syllabus Manager System solves the problem of decentralized and inconsistent syllabus management. It provides a robust platform for:
-- Standardized syllabus creation (JSON-based).
-- Git-like Version Control (commits, diffs, history).
-- Role-Based Access Control (RBAC) with hierarchical permissions.
-- Multi-channel Notification System (Observer Pattern).
-- **Admin System Management**: User creation and deletion capabilities.
-- **Unit Testing**: Comprehensive test suite covering commands and services.
+## 🎯 Project Overview
 
-## Architecture & Design Patterns
+A comprehensive syllabus management system demonstrating enterprise-grade object-oriented design patterns, SOLID principles, and clean architecture. The system provides secure CRUD operations for university syllabi with role-based access control, real-time notifications, and version control integration.
 
-The project strictly adheres to **SOLID Principles** and utilizes the following Design Patterns:
+## ✨ Key Features
 
-### 1. Command Pattern (`Commands/`)
-Decouples the invoker (Menu) from the receiver (Services). Every user action is a concrete command class.
-- `ICommand`: Base interface.
-- `CreateSyllabusCommand`, `RevertCommand`, `CreateUserCommand`: Encapsulate requests as objects.
+- 🔐 **OAuth Authentication Simulation** with role-based permissions
+- 📚 **Complete Syllabus Management** (Create, Read, Update, Delete)
+- 👥 **Multi-Role Access Control** (Instructor, Head of Department, Admin)
+- 🔔 **Real-time Notification System** using Observer pattern
+- 📧 **Email/SMS Notifications** with delivery tracking (Simulated)
+- 💾 **JSON-based Persistence** with automatic backup
+- 📜 **Version Control** with commit history and diff generation
+- 🔙 **Revert Capability** to restore previous syllabus versions
+- 📊 **Comprehensive Audit Logging** for all operations
+- 🧵 **Thread-safe Concurrent Access** for multi-user scenarios
+- 🎮 **Interactive Console Interface** with command pattern
 
-### 2. Factory Pattern (`Factories/ServiceFactory.cs`)
-Centralizes object creation and dependency injection. It handles the instantiation of complex services like `SyllabusService` and `NotificationService` with their dependencies.
-- Ensures the client code does not need to know the specific class to instantiate.
+## 🏗️ Architecture & Design Patterns
 
-### 3. Observer Pattern (`Services/NotificationService.cs`)
-Enables the "Publish-Subscribe" mechanism for notifications.
-- **Subject**: `NotificationService`.
-- **Observers**: Registered channels (e.g., Email, SMS).
-- Users subscribe to course patterns (e.g., "CE*") and are notified automatically on changes.
+### Clean Architecture Layers
+```
+┌─ Presentation Layer ─────────────────────┐
+│  Console UI (Program.cs), Commands       │
+├─ Application Layer ──────────────────────┤
+│  Services (Syllabus, User, Notification) │
+├─ Infrastructure Layer ───────────────────┤
+│  Repositories (JSON), Adapters (Email)   │
+└─ Domain Layer ───────────────────────────┘
+   Models (User, Syllabus), Interfaces
+```
 
-### 4. Adapter Pattern (`Services/EmailAdapter.cs`)
-Allows incompatible interfaces to work together.
-- `INotificationChannel` interface abstracts the sending mechanism.
-- `EmailAdapter` adapts a potential external email library to our system's interface.
+### Design Patterns Implemented
+- **🏭 Factory Pattern** - Centralized service instantiation (`ServiceFactory`)
+- **📦 Repository Pattern** - Data access with JSON storage (`JsonDataRepository`)
+- **⚡ Command Pattern** - Encapsulating user actions (`ConcreteCommands.cs`)
+- **👀 Observer Pattern** - Notification system for changes (`NotificationService`)
+- **🔌 Adapter Pattern** - Adapting external channels like Email (`EmailAdapter`)
+- **🛡️ Strategy Pattern** - Authorization logic (`AuthorizationService`)
 
-### 5. Service Layer Pattern (`Services/`)
-Encapsulates business logic.
-- `AuthorizationService`: Central logic for "Who can do what".
-- `UserManagementService`: Logic for Admin operations.
-- `VersionControlService`: Logic for computing diffs and managing commits.
+### SOLID Principles
+- **Single Responsibility** - Separated concerns (e.g., `SyllabusService` vs `UserManagementService`)
+- **Open/Closed** - New commands can be added without modifying the invoker
+- **Liskov Substitution** - `InstructorUser` and `AdminUser` can replace `User` base class
+- **Interface Segregation** - Specialized interfaces like `INotificationChannel`
 
-## Project Structure
+## 🚀 Getting Started
+
+### Prerequisites
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- Docker (Optional, for containerized run)
+
+### Running Locally
+```bash
+# Data directory will be created automatically on first run
+
+# Run the application
+dotnet run --project SyllabusManager/SyllabusManager.csproj
+```
+
+### Running with Docker
+```bash
+# Build the image and run tests
+docker build --progress=plain -f SyllabusManager/Dockerfile -t syllabus-app .
+
+# Run the container
+docker run --rm -it syllabus-app
+```
+
+### First Login
+Use these default accounts to explore the system:
+```bash
+syllabus> login Kaya Oguz      (Pass: kayaoguz123)   # Instructor (CE Dept)
+syllabus> login Department Head (Pass: head123)       # Head of Dept (CE)
+syllabus> login Admin          (Pass: admin123)      # Administrator (ALL)
+```
+
+## 📖 Usage Examples
+
+### Basic Operations
+```bash
+# View help/menu
+syllabus> help
+
+# List all syllabi
+syllabus> 1
+
+# Create new syllabus
+syllabus> 2
+# Follow prompts for Code, Title, Semester
+
+# Update existing syllabus
+syllabus> 3
+
+# Delete syllabus
+syllabus> 4
+
+# View syllabus details
+syllabus> 5
+
+# View commit history
+syllabus> 6
+```
+
+### Advanced Features
+```bash
+# Subscribe to notifications (e.g., for "CE" courses)
+syllabus> 7
+
+# Revert detailed syllabus to ID
+syllabus> 8
+
+# Logout
+syllabus> 9
+```
+
+### Admin Operations
+```bash
+# Create new user
+syllabus> 10
+
+# Delete user
+syllabus> 11
+```
+
+## 🧪 Testing
+
+Comprehensive test suite using **xUnit** and **Moq**:
+
+```bash
+# Run all tests
+dotnet test Tests/Tests.csproj
+
+# Run with coverage (if installed)
+dotnet test Tests/Tests.csproj --collect:"XPlat Code Coverage"
+```
+
+## 🔒 Security & Permissions
+
+### Role-Based Access Matrix
+| Role | View | Create/Edit | Delete | Notifications | Admin Ops |
+|------|------|-------------|--------|---------------|-----------|
+| Instructor | ✅ All | ✅ Dept Only | ✅ Dept Only | ❌ | ❌ |
+| Dept Head | ✅ All | ✅ All | ✅ All | ✅ Watched | ❌ |
+| Admin | ✅ All | ✅ All | ✅ All | ✅ All | ✅ |
+
+### Security Features
+- **Input Validation** on all commands
+- **Audit Trail** (`audit.json`) logging all critical actions
+- **Thread-Safety** using locks in Repository
+
+## 📁 Project Structure
 
 ```
 SysManage/
 ├── SyllabusManager/          # Main Application
-│   ├── Commands/             # Command implementations
-│   ├── Data/                 # JSON Repositories
-│   ├── Factories/            # Service Factory
-│   ├── Models/               # Domain Models (User, Syllabus, Commit)
-│   ├── Services/             # Business Logic Services
-│   ├── Program.cs            # Entry Point & Menu
-│   └── Dockerfile            # Application Container Config
+│   ├── Commands/             # User Commands (Command Pattern)
+│   ├── Data/                 # JSON Repositories (Repository Pattern)
+│   ├── Factories/            # Service Creation (Factory Pattern)
+│   ├── Models/               # Domain Models (User, Syllabus)
+│   ├── Services/             # Business Logic & Strategies
+│   └── Program.cs            # Console Entry Point
 ├── Tests/                    # Unit Tests
-│   ├── CommandTests.cs       # Tests for user commands
-│   ├── ServiceTests.cs       # Tests for business logic
-│   └── Tests.csproj          # xUnit Test Project
-└── README.md                 # Documentation
+│   ├── CommandTests.cs       # UI Logic Tests
+│   └── ServiceTests.cs       # Business Logic Tests
+└── README.md                 # This Documentation
 ```
 
-## Running with Docker (Recommended)
+## 🔧 Technologies Used
 
-The project includes a single `Dockerfile` that handles building, testing, and running the application in a containerized environment.
+- **Language:** C# 11.0 with .NET 8.0
+- **Storage:** JSON with file-based persistence
+- **Containerization:** Docker
+- **Testing:** xUnit, Moq
+- **Design Patterns:** Factory, Command, Observer, Adapter, Repository
 
-### Step 1: Build & Test
-This command builds the project and **automatically runs the unit tests**. If tests fail, the image will not be created.
+## 👨‍💻 Author
 
-```bash
-docker build --progress=plain -f SyllabusManager/Dockerfile -t syllabus-app .
-```
+**Kadir Biberoğlu**  
+Student ID: 20200601105  
+Course: SE 307 - Concepts of Object Oriented Programming  
+Instructor: Kaya Oğuz  
+Institution: Izmir University of Economics
 
-### Step 2: Run Application
-Once built, run the application interactively:
+---
 
-```bash
-docker run --rm -it syllabus-app
-```
-
-## User Roles & Permissions
-
-1.  **Instructor (`InstructorUser`)**
-    *   Create/Edit/Delete Syllabi (Only for their Department).
-    *   Cannot modify other departments' courses.
-    *   *Example Login*: Kaya Oguz
-
-2.  **Head of Department (`HeadOfDepartmentUser`)**
-    *   **Full Access**: Can Create/Edit/Delete ANY syllabus regardless of department.
-    *   Receives notifications for changes.
-    *   *Example Login*: Jane Smith
-
-3.  **Admin (`AdminUser`)**
-    *   **System Management**: Create and Delete Users.
-    *   Full access to all syllabus operations.
-    *   *Example Login*: Admin
-
-## Unit Tests
-
-The project includes a comprehensive Test Suite using **xUnit** and **Moq**.
-- **Location**: `/Tests` directory.
-- **Coverage**:
-    - **Commands**: Verifies that user inputs correctly trigger service methods.
-    - **Services**: Verifies business rules (e.g., "Instructor cannot edit wrong dept", "Admin can create user").
-    - **Integrations**: Tests the notification subscription flow.
-
-## Technologies
-
-- **.NET 8.0**: Core framework.
-- **xUnit**: Testing framework.
-- **Moq**: Mocking library for unit tests.
-- **Docker**: Containerization and CI/CD simulation.
-- **JSON**: Lightweight data persistence.
+⭐ **Star this repository if you found it helpful!**

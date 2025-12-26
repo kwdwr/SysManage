@@ -74,7 +74,8 @@
     <li><strong>Presentation Layer:</strong> Console-based UI driven by the Command Pattern
       (<code>CommandInvoker</code>).</li>
     <li><strong>Service Layer:</strong> Encapsulates business rules (<code>SyllabusService</code>,
-      <code>UserManagementService</code>, <code>PermissionService</code>).</li>
+      <code>UserManagementService</code>, <code>PermissionService</code>).
+    </li>
     <li><strong>Data Layer:</strong> <code>JsonDataRepository</code> provides persistent storage using JSON files.</li>
     <li><strong>Test Layer:</strong> Independent test project validating core logic and commands.</li>
   </ul>
@@ -83,11 +84,13 @@
   <p>The system strictly adheres to SOLID principles and utilizes multiple GoF Design Patterns:</p>
   <ul>
     <li><strong>Command Pattern:</strong> Decouples the UI from business logic. Operations like
-      <code>CreateUserCommand</code> or <code>RevertCommand</code> are encapsulated objects.</li>
+      <code>CreateUserCommand</code> or <code>RevertCommand</code> are encapsulated objects.
+    </li>
     <li><strong>Factory Pattern:</strong> <code>ServiceFactory</code> centralizes dependency injection, ensuring loosely
       coupled components.</li>
     <li><strong>Observer Pattern:</strong> <code>NotificationService</code> (Subject) notifies registered
-      <code>INotificationChannel</code> (Observers) when a syllabus changes, enabling real-time alerts.</li>
+      <code>INotificationChannel</code> (Observers) when a syllabus changes, enabling real-time alerts.
+    </li>
     <li><strong>Adapter Pattern:</strong> <code>EmailAdapter</code> wraps external service interfaces to match the
       system's <code>INotificationChannel</code>, promoting interoperability.</li>
     <li><strong>Strategy Pattern (Implicit):</strong> The notification system allows runtime selection of different
@@ -120,5 +123,6 @@
     By integrating <strong>Design Patterns</strong>, <strong>Unit Testing</strong>, and
     <strong>Containerization</strong>, the project serves as a scalable and maintainable solution for academic course
     management. The addition of Admin tools and robust testing infrastructure ensures both flexibility and system
-    stability.</p>
+    stability.
+  </p>
 </div>
