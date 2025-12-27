@@ -268,9 +268,7 @@ FodyWeavers.xsd
 # Runtime data
 *.cache
 *.dll
-*.exe
 *.pdb
 *.dll.config
-*.exe.config
 *.runtimeconfig.json
 *.deps.json
